@@ -69,7 +69,7 @@ public class DroneController : MonoBehaviour
         deltaVelocity += extForces;
         deltaVelocity *= Time.fixedDeltaTime;
         deltaVelocity /= mass;
-        transform.Translate(velocity + deltaVelocity / 2f);
+        transform.position += (velocity + deltaVelocity / 2f);
         velocity += deltaVelocity;
 
         angularVelocity *= Mathf.Exp(-angularDrag * Time.fixedDeltaTime);
@@ -78,6 +78,6 @@ public class DroneController : MonoBehaviour
 
     private Vector3 RotorTorque(int index)
     {
-        return Vector3.Cross(rotors[index].transform.localPosition, rotors[index].transform.up) * rotorSpeeds[index];
+        return Vector3.Cross(rotors[index].transform.position - transform.position, rotors[index].transform.up) * rotorSpeeds[index];
     }
 }
