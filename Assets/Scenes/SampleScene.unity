@@ -275,18 +275,19 @@ MonoBehaviour:
   - {fileID: 10602093}
   mass: 0.3
   SMoI: 0.5
-  maxRotorSpeed: 5
+  maxRotorSpeed: 10
   extForces: {x: 0, y: -10, z: 0}
   linearDrag: 0.4
   angularDrag: 0.2
   ascentSpeed: 10
+  yawSpeed: 10
   tilt: 0.2
   vkP: 1
   vkI: 20
-  vkD: 1
-  rkP: 2
-  rkI: 0
-  rkD: 5
+  vkD: 5
+  rkP: 1.2
+  rkI: 0.08
+  rkD: 4
   akP: 2
   akI: 0.1
   akD: 20

@@ -15,6 +15,7 @@ public class DroneController : MonoBehaviour
 
     [Header("Controller Parameters")]
     [SerializeField] private float ascentSpeed;
+    [SerializeField] private float yawSpeed;
     [SerializeField] private float tilt;
 
     [Header("PID Parameters")]
@@ -41,7 +42,7 @@ public class DroneController : MonoBehaviour
 
     private bool hovering = true;
 
-    const float visualRotorSpeed = 5000f;
+    const float visualRotorSpeed = 10000f;
 
     private void Start()
     {
@@ -72,7 +73,9 @@ public class DroneController : MonoBehaviour
     {
         if (hovering)
         {
-            DirectedHover(Input.GetAxis("Elevation") * Vector3.up * ascentSpeed, Vector3.up + Input.GetAxis("Vertical") * transform.forward * tilt + Input.GetAxis("Horizontal") * transform.right * tilt);
+            DirectedHover(  Input.GetAxis("Elevation") * Vector3.up * ascentSpeed, 
+                            Vector3.up + Input.GetAxis("Vertical") * transform.forward * tilt + Input.GetAxis("Horizontal") * transform.right * tilt,
+                            Input.GetAxis("Yaw") * yawSpeed);
         }
 
         PhysicsUpdate();
@@ -105,7 +108,7 @@ public class DroneController : MonoBehaviour
         velocity *= Mathf.Exp(-linearDrag * Time.fixedDeltaTime);
     }
 
-    private void DirectedHover(Vector3 targetVerticalVelocity, Vector3 targetUpVector)
+    private void DirectedHover(Vector3 targetVerticalVelocity, Vector3 targetUpVector, float yaw)
     {
 
         Vector3 velocityError = targetVerticalVelocity - velocity;
@@ -116,6 +119,7 @@ public class DroneController : MonoBehaviour
         Vector3 rotationError = Vector3.Angle(targetUpVector, transform.up) * Vector3.Cross(transform.up, targetUpVector).normalized;
         accumulatedRotationError += rotationError * Time.fixedDeltaTime;
         Vector3 targetAngularVelocity = PID(rkP, rkI, rkD, rotationError, accumulatedRotationError, previousRotationError);
+        targetAngularVelocity += yaw * transform.up;
         previousRotationError = rotationError;
 
         Vector3 AVError = targetAngularVelocity - angularVelocity;
